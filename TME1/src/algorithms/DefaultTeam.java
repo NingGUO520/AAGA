@@ -44,37 +44,39 @@ public class DefaultTeam {
 
 	
 	public ArrayList<Point> calculFVS_glouton(ArrayList<Point> points, int edgeThreshold) {
-
+		
 		Evaluation eval = new Evaluation();
-		ArrayList<Point> fvs = new ArrayList<Point>();
+		ArrayList<Point> fvs;
 
 		ArrayList<Point> lesPoints = (ArrayList<Point>) points.clone();
 		ArrayList<Point> graphe = new ArrayList<>();
 		
-		for(int i=0; i<1000; i++) {
-			for(Point p :points) {
-				if (neighbor(p,lesPoints,edgeThreshold).size()==i) {
-					fvs= (ArrayList<Point>) points.clone();
-					fvs.removeAll(graphe);
-					
-					if (eval.isValid(points, fvs, edgeThreshold))
-						graphe.add(p);
-				}
+			while (!lesPoints.isEmpty()){
+				Point p  = getDegMin(lesPoints,edgeThreshold);
+				
+					ArrayList<Point> fvs_tmp = (ArrayList<Point>) points.clone();
+					graphe.add(p);
+					lesPoints.remove(p);
+					//System.out.println("remove"+ b);
+					fvs_tmp.removeAll(graphe);
+					if (!eval.isValid(points, fvs_tmp, edgeThreshold)) {
+						graphe.remove(p);
+					}
+				
+		
 			}
-		}
 		
-		
-	
-
+		fvs = (ArrayList<Point>) points.clone();
+		fvs.removeAll(graphe);
 		return fvs;
 	}
 	
 	public Point getDegMin(ArrayList<Point> points,int edgeThreshold) {
-		int min = 10000;
+		int min = points.size();
 		Point minP = null;
 		for (Point p : points) {
 			int size = neighbor(p,points,edgeThreshold).size();
-			if (size<min) {
+			if (size<=min) {
 				min = size;
 				minP = p;
 				
@@ -85,14 +87,19 @@ public class DefaultTeam {
 	}
 	
 	
+	/**
+	 * @param points
+	 * @param edgeThreshold
+	 * @return
+	 */
 	public ArrayList<Point> calculFVS(ArrayList<Point> points, int edgeThreshold) {
 
 
 		ArrayList<Point> glouton = calculFVS_glouton(points,edgeThreshold);
+	//	ArrayList<Point>  resultat =glouton;
+	//	int nombre = glouton.size();
 
-
-
-
+/*
 		ArrayList<Point> reste = (ArrayList<Point>) points.clone();
 
 		reste.removeAll(glouton);
@@ -114,36 +121,36 @@ public class DefaultTeam {
 
 
 
+		}*/
+		
+		
+		//improve 2 
+	/*	ArrayList<Point> leReste = (ArrayList<Point>) points.clone();
+
+		leReste.removeAll(resultat);
+
+		  resultat = improve2(points,resultat,  leReste,edgeThreshold) ;
+
+		while(nombre > resultat.size()) {
+
+
+			nombre = resultat.size();
+
+			ArrayList<Point> reste2 = (ArrayList<Point>) points.clone();
+			reste2.removeAll(resultat);
+
+			resultat = improve2(points,resultat,  reste2,edgeThreshold) ;
+
+
+
 		}
-		
-		
-//		//improve 2 
-//		ArrayList<Point> leReste = (ArrayList<Point>) points.clone();
-//
-//		leReste.removeAll(resultat);
-//
-//		  resultat = improve2(points,resultat,  leReste,edgeThreshold) ;
-//
-//		while(nombre > resultat.size()) {
-//
-//
-//			nombre = resultat.size();
-//
-//			ArrayList<Point> reste2 = (ArrayList<Point>) points.clone();
-//			reste2.removeAll(resultat);
-//
-//			resultat = improve2(points,resultat,  reste2,edgeThreshold) ;
-//
-//
-//
-//		}
-		
-		System.out.print(nombre);
+		*/
+		//System.out.print(nombre);
 		
 
 
 
-		return resultat;
+		return glouton;
 	}
 
 	public ArrayList<Point> improve2(ArrayList<Point> origin,
@@ -166,8 +173,8 @@ public class DefaultTeam {
 					Point mid = new Point(x,y);
 
 
-					if(p.distance(q)>3*edgeThreshold) { continue;}
-					if(m.distance(mid)>4*edgeThreshold) { continue;}
+					if(p.distance(q)>2*edgeThreshold) { continue;}
+					if(m.distance(mid)>2*edgeThreshold) { continue;}
 
 
 
@@ -216,14 +223,14 @@ public class DefaultTeam {
 				Point p = solution.get(i);
 				Point q = solution.get(j);
 
-
-
-				if(p.distance(q)>3*edgeThreshold) { continue;}
+				if(p.distance(q)>2*edgeThreshold) { continue;}
 
 
 
 				for(Point r: reste) {
-
+					if(r.equals(p)  || r.equals(q)) {
+						continue;
+					}
 					solutionPrime = (ArrayList<Point>) solution.clone();
 					solutionPrime.remove(p);
 					solutionPrime.remove(q);
