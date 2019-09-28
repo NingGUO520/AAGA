@@ -2,8 +2,6 @@ package algorithms;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
 
 public class DefaultTeam {
 
@@ -50,21 +48,27 @@ public class DefaultTeam {
 
 		ArrayList<Point> lesPoints = (ArrayList<Point>) points.clone();
 		ArrayList<Point> graphe = new ArrayList<>();
-		
-			while (!lesPoints.isEmpty()){
-				Point p  = getDegMin(lesPoints,edgeThreshold);
-				
-					ArrayList<Point> fvs_tmp = (ArrayList<Point>) points.clone();
-					graphe.add(p);
-					lesPoints.remove(p);
-					//System.out.println("remove"+ b);
-					fvs_tmp.removeAll(graphe);
-					if (!eval.isValid(points, fvs_tmp, edgeThreshold)) {
-						graphe.remove(p);
-					}
-				
-		
+
+		//Si un sommet est de degree 1, on est sure qu'il est pas dans un cycle
+		for(Point p: points) {
+			if(neighbor(p,points,edgeThreshold).size()<2) {
+				graphe.add(p);
+				lesPoints.remove(p);
 			}
+			
+		}
+		while (!lesPoints.isEmpty()){
+			Point p = getDegMin(lesPoints,edgeThreshold);
+
+			ArrayList<Point> fvs_tmp = (ArrayList<Point>) points.clone();
+			graphe.add(p);
+			lesPoints.remove(p);
+			fvs_tmp.removeAll(graphe);
+			if (!eval.isValid(points, fvs_tmp, edgeThreshold)) {
+				graphe.remove(p);
+			}
+
+		}
 		
 		fvs = (ArrayList<Point>) points.clone();
 		fvs.removeAll(graphe);
@@ -79,7 +83,6 @@ public class DefaultTeam {
 			if (size<=min) {
 				min = size;
 				minP = p;
-				
 			}
 		}
 		
@@ -96,12 +99,15 @@ public class DefaultTeam {
 
 
 		ArrayList<Point> glouton = calculFVS_glouton(points,edgeThreshold);
-	//	ArrayList<Point>  resultat =glouton;
+	//	ArrayList<Point>  resultat = glouton;
 	//	int nombre = glouton.size();
 
-/*
+		
+		
 		ArrayList<Point> reste = (ArrayList<Point>) points.clone();
 
+		glouton = removeDuplicates(glouton);
+		reste = removeDuplicates(reste);
 		reste.removeAll(glouton);
 
 
@@ -121,7 +127,7 @@ public class DefaultTeam {
 
 
 
-		}*/
+		}
 		
 		
 		//improve 2 
@@ -150,7 +156,7 @@ public class DefaultTeam {
 
 
 
-		return glouton;
+		return resultat;
 	}
 
 	public ArrayList<Point> improve2(ArrayList<Point> origin,
@@ -223,7 +229,7 @@ public class DefaultTeam {
 				Point p = solution.get(i);
 				Point q = solution.get(j);
 
-				if(p.distance(q)>2*edgeThreshold) { continue;}
+				if(p.distance(q)>3*edgeThreshold) { continue;}
 
 
 
@@ -254,6 +260,15 @@ public class DefaultTeam {
 
 		return result;
 	}
-
-
+	
+	public ArrayList<Point> removeDuplicates(ArrayList<Point> points) {
+		ArrayList<Point> result = (ArrayList<Point>)points.clone();
+		for (int i=0;i<result.size();i++) {
+			for (int j=i+1;j<result.size();j++) if (result.get(i).equals(result.get(j))) {
+				result.remove(j);
+				j--;
+			}
+		}
+		return result;
+	}
 }
