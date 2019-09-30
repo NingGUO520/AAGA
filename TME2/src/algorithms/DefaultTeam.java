@@ -44,7 +44,7 @@ public class DefaultTeam {
 		double X =(double) (minX+maxX)/2;
 		
 		for(Point p:points) {
-			if(p.x<X+(double)edgeThreshold/2 && p.x>X-(double)edgeThreshold/2) {
+			if(p.x<=X+(double)edgeThreshold/2 && p.x>=X-(double)edgeThreshold/2) {
 				separateurs.add(p);
 			}
 		}
