@@ -113,7 +113,7 @@ public class DefaultTeam {
 
 
 		int nombre = glouton.size();
-		ArrayList<Point>  resultat = improve1(points,glouton,  reste,edgeThreshold) ;
+		ArrayList<Point>  resultat = improve2(points,glouton,  reste,edgeThreshold) ;
 
 		while(nombre > resultat.size()) {
 
@@ -123,7 +123,7 @@ public class DefaultTeam {
 			ArrayList<Point> reste2 = (ArrayList<Point>) points.clone();
 			reste2.removeAll(resultat);
 
-			resultat = improve1(points,resultat,  reste2,edgeThreshold) ;
+			resultat = improve2(points,resultat,  reste2,edgeThreshold) ;
 
 
 
@@ -179,8 +179,8 @@ public class DefaultTeam {
 					Point mid = new Point(x,y);
 
 
-					if(p.distance(q)>2*edgeThreshold) { continue;}
-					if(m.distance(mid)>2*edgeThreshold) { continue;}
+					if(p.distance(q)>3*edgeThreshold) { continue;}
+					if(m.distance(mid)>3*edgeThreshold) { continue;}
 
 
 
@@ -194,7 +194,9 @@ public class DefaultTeam {
 						
 							Point r = reste.get(a);
 							Point r2 = reste.get(b);
-
+							if (r.equals(p) || r.equals(q) || r.equals(m))
+								if (r2.equals(p) || r2.equals(r) || r.equals(m))
+									continue;
 
 							solutionPrime = (ArrayList<Point>) solution.clone();
 							solutionPrime.remove(p);
@@ -270,5 +272,10 @@ public class DefaultTeam {
 			}
 		}
 		return result;
+	}
+	
+	public Point getCenterPoint(Point p1, Point p2, Point p3) {
+		Point center = new Point();
+		return center;
 	}
 }
