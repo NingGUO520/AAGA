@@ -8,7 +8,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -34,16 +33,17 @@ public class DefaultTeam {
 		
 		//System.out.println(nbBout(points,edgeThreshold));
 		ArrayList<Point> result = glouton(points, edgeThreshold);
-		result= localSearch1(points,result,edgeThreshold);
+		//result= localSearch1(points,result,edgeThreshold);
 		result= localSearch2(points,result,edgeThreshold);
 		
-		if (false) result = readFromFile("output0.points");
-		else saveToFile("output",result);
+		//if (false) result = readFromFile("output0.points");
+		//else saveToFile("output",result);
 		
 		return result;
 	}
 	
 	
+	// retourne le nombre de sommet qui n'a qu'un seul voisin = le bout du graphe
 	private int nbBout(ArrayList<Point> a, int edgeThreshold) {
 		int cpt = 0;
 		for (Point p : a) {
@@ -92,9 +92,12 @@ public class DefaultTeam {
 
 		ArrayList<Point> dominant = new ArrayList<Point>();
 		ArrayList<Point> graphe = (ArrayList<Point>) points.clone();
+		ArrayList<Point> points_enAttente = new ArrayList<Point>();
 
 		while(!isValid(points,dominant,edgeThreshold)) {
 			Point pmax = getDegMax(graphe,edgeThreshold);
+			ArrayList<Point> voisins_pmax = neighbor(pmax, graphe, edgeThreshold); //graphe ou points ?
+			if (voisins_pmax.contains(pmax))
 			dominant.add(pmax);
 			ArrayList<Point> voisins = neighbor( pmax, graphe, edgeThreshold);
 			graphe.remove(pmax);
@@ -102,6 +105,11 @@ public class DefaultTeam {
 			System.out.println("Dans le glouton, dominant de taille "+dominant.size());
 		}
 		return dominant;
+	}
+	
+	//retourne si il y a un voisin qui appartient au dom
+	public boolean hasVoisinDom() {
+		return true;
 	}
 
 	/**
@@ -291,6 +299,7 @@ public class DefaultTeam {
 				if(m.distance(n)>3*edgeThreshold) continue;
 
 				for(Point p: reste) {
+					
 					res = (ArrayList<Point>) domNaif.clone();
 					res.remove(m);
 					res.remove(n);
