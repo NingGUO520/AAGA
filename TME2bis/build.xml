@@ -40,7 +40,6 @@
     	<arg value="-edgeThreshold"/>
     	<arg value="55"/>
     	<arg value="-proxyPPTI"/>
-
     </java>
   </target>
 

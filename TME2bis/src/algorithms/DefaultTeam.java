@@ -2,6 +2,7 @@ package algorithms;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.io.FileNotFoundException;
@@ -65,13 +66,23 @@ public class DefaultTeam {
 				taille2 = dominant.size();
 			}
 			//union des dominant
-			//			System.out.println("taille de dominant"+ dominant.size());
+			System.out.println("taille de dominant"+ dominant.size());
 			result.addAll(dominant);
 			graphe.removeAll(subset);
 		}
 		ArrayList<Point> dominants = new ArrayList<Point>();
 		dominants.addAll(result);
 		dominants = cleanDominants(points,dominants,edgeThreshold);
+		
+		int size1 = dominants.size();
+		dominants= localSearch2_1(points,dominants,edgeThreshold);
+		int size2 = result.size();
+		while(size2<size1) {
+			size1 = result.size();
+			dominants= localSearch2_1(points,dominants,edgeThreshold);
+			size2 = result.size();
+		}
+		
 		return dominants;
 	}
 
@@ -79,8 +90,6 @@ public class DefaultTeam {
 
 		ArrayList<Point> result = glouton(points, edgeThreshold);
 		int size1 = result.size();
-		
-		
 		result= localSearch2_1(points,result,edgeThreshold);
 		int size2 = result.size();
 		while(size2<size1) {
@@ -88,23 +97,23 @@ public class DefaultTeam {
 			result= localSearch2_1(points,result,edgeThreshold);
 			size2 = result.size();
 		}
-		
-		size1 = result.size();
-		int i = 0;
-		result= localSearch3_2(points,result,edgeThreshold);
-		i++;
-		size2 = result.size();
-		while(size2<size1 && i<4) {
-			size1 = result.size();
-			result= localSearch3_2(points,result,edgeThreshold);
-			i++;
-			size2 = result.size();
-		}
+//		size1 = result.size();
+//		int i = 0;
+//		result= localSearch3_2(points,result,edgeThreshold);
+//		i++;
+//		size2 = result.size();
+//		while(size2<size1 && i<2) {
+//			size1 = result.size();
+//			result= localSearch3_2(points,result,edgeThreshold);
+//			i++;
+//			size2 = result.size();
+//		}
 		return result;
 	}
 
 	public ArrayList<Point> calculDominatingSet(ArrayList<Point> points, int edgeThreshold) {
-		ArrayList<Point> result = algo(points,edgeThreshold,1.1);
+		ArrayList<Point> result = algo(points,edgeThreshold, 1.1);
+		System.out.println("size of result "+result.size());
 		return result;
 	}
 
@@ -145,7 +154,7 @@ public class DefaultTeam {
 	}
 
 	public ArrayList<Point> localSearch3_2(ArrayList<Point> points, ArrayList<Point> domNaif, int edgeThreshold) {
-		System.out.println("taille de dominants = "+ domNaif.size());
+		//		System.out.println("taille de dominants = "+ domNaif.size());
 		ArrayList<Point> solutionPrime = new ArrayList<Point>(); 
 		for (int i=0; i<domNaif.size() ; i++) {
 			Point m = domNaif.get(i);
@@ -157,7 +166,7 @@ public class DefaultTeam {
 				double x = (double)(m.x+n.x)/2;
 				double y = (double)(m.y+n.y)/2;
 				Point midPoint = new Point((int)x,(int)y);
-				
+
 				for (int k=j+1; k<domNaif.size();k++) {
 					Point q = domNaif.get(k);
 					if(q.distance(midPoint)>2*edgeThreshold) continue;
@@ -165,11 +174,11 @@ public class DefaultTeam {
 					double my = (double)(m.y+n.y+q.y)/3;
 					Point pointMilieu = new Point((int)mx,(int)my);
 					for(Point p1: points) {
-						if(p1.equals(m) || p1.equals(n) || p1.equals(q)|| p1.distance(pointMilieu)>3*edgeThreshold) {
+						if(p1.equals(m) || p1.equals(n) || p1.equals(q)|| p1.distance(pointMilieu)>2*edgeThreshold) {
 							continue;
 						}
 						for(Point p2: points) {
-							if(p2.equals(m) || p2.equals(n) || p2.equals(q) || p2.equals(p1) || p2.distance(pointMilieu)>3*edgeThreshold) {
+							if(p2.equals(m) || p2.equals(n) || p2.equals(q) || p2.equals(p1) || p2.distance(pointMilieu)>2*edgeThreshold) {
 								continue;
 							}
 							solutionPrime = (ArrayList<Point>) domNaif.clone();
@@ -186,7 +195,6 @@ public class DefaultTeam {
 		}
 		return domNaif;
 	}
-
 
 	public ArrayList<Point> glouton(ArrayList<Point> points, int edgeThreshold) {
 		ArrayList<Point> dominant = new ArrayList<Point>();
