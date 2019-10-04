@@ -9,12 +9,40 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 public class DefaultTeam {
 
 
+	public ArrayList<Point> preTraiteDominant(ArrayList<Point> points, int edgeThreshold){
+		ArrayList<Point> dominants = new ArrayList<Point>();
+
+		for(Point p:points) {
+			ArrayList<Point> voisin = neighbor(p,points,edgeThreshold);
+			if(voisin.size()==0) {
+				dominants.add(p);
+			}else if(voisin.size() == 1) {
+				dominants.add(voisin.get(0));
+			}
+		}
+		return dominants;
+	}
+	public ArrayList<Point> gloutonAlea(ArrayList<Point> points, int edgeThreshold) {
+
+		ArrayList<Point> dominant = new ArrayList<Point>();
+		ArrayList<Point> graphe = (ArrayList<Point>) points.clone();
+		while(!isValid(points,dominant,edgeThreshold)) {
+			Collections.shuffle(graphe);
+			Point p = graphe.get(0);
+			dominant.add(p);
+			ArrayList<Point> voisins = neighbor( p, graphe, edgeThreshold);
+			graphe.remove(p);
+			graphe.removeAll(voisins);
+		}
+		return dominant;
+	}
 	public ArrayList<Point> glouton(ArrayList<Point> points, int edgeThreshold) {
 
 		ArrayList<Point> dominant = new ArrayList<Point>();
@@ -41,7 +69,6 @@ public class DefaultTeam {
 		}
 		return maxP;
 	}
-
 
 	public ArrayList<Point> cleanDominants(ArrayList<Point> points, ArrayList<Point> domNaif, int edgeThreshold) {
 		ArrayList<Point> res = (ArrayList<Point>) domNaif.clone();
@@ -85,18 +112,39 @@ public class DefaultTeam {
 
 	public ArrayList<Point> calculDominatingSet(ArrayList<Point> points, int edgeThreshold) {
 
-		ArrayList<Point> result = glouton(points, edgeThreshold);
-		result= cleanDominants(points,result,edgeThreshold);
+		// pretraitement: enlever tous les points de degree 0 et les voisins de degree 1
+		ArrayList<Point> dominants0 =	 preTraiteDominant( points,  edgeThreshold);
+		ArrayList<Point> resultFinal = new ArrayList<Point>();
+		resultFinal.addAll(dominants0);
 
-		int nb1 = result.size();
-		result= localSearch2_1(points,result,edgeThreshold);
-		int nb2 = result.size();
-		while(nb2<nb1) {
-			nb1 = result.size();
-			result= localSearch2_1(points,result,edgeThreshold);
-			nb2 = result.size();
+		for(Point p:dominants0) {
+			points.removeAll(neighbor(p,points,edgeThreshold));
 		}
-		return result;
+		points.removeAll(dominants0);
+
+		ArrayList<Point>  resultMinimum = gloutonAlea(points, edgeThreshold);
+		int size = resultMinimum.size();
+		for(int i = 0; i<100;i++) {
+			ArrayList<Point> result = gloutonAlea(points, edgeThreshold);
+			result= cleanDominants(points,result,edgeThreshold);
+
+			System.out.println("nombre de points " + result.size());
+			if(result.size()<size) {
+				size = result.size();
+				resultMinimum = result;
+			}
+		}
+		resultFinal.addAll(resultMinimum);
+
+		//		int nb1 = result.size();
+		//		result= localSearch2_1(points,result,edgeThreshold);
+		//		int nb2 = result.size();
+		//		while(nb2<nb1) {
+		//			nb1 = result.siresultFinalze();
+		//			result= localSearch2_1(points,result,edgeThreshold);
+		//			nb2 = result.size();
+		//		}
+		return resultFinal;
 	}
 
 	public boolean isValid(ArrayList<Point> points, ArrayList<Point> dominants,
