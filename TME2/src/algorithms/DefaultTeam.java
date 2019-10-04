@@ -329,7 +329,7 @@ public class DefaultTeam {
 		return res;
 	}
 
-	public ArrayList<Point> localSearch2_1(ArrayList<Point> points, ArrayList<Point> domNaif, int edgeThreshold) {
+	public static ArrayList<Point> localSearch2_1(ArrayList<Point> points, ArrayList<Point> domNaif, int edgeThreshold) {
 
 		ArrayList<Point> solutionPrime = new ArrayList<Point>();
 		ArrayList<Point> reste = (ArrayList<Point>) points.clone();
@@ -357,35 +357,36 @@ public class DefaultTeam {
 		return domNaif;
 	}
 
-	public ArrayList<Point> localSearchNaif3_2(ArrayList<Point> points, ArrayList<Point> domNaif, int edgeThreshold) {
+	public static ArrayList<Point> localSearchNaif3_2(ArrayList<Point> points, ArrayList<Point> domNaif, int edgeThreshold) {
 		System.out.println("taille de dominants localS3_2 = "+ domNaif.size());
+		ArrayList<Point> solutionPrime = new ArrayList<Point>(); 
 		ArrayList<Point> reste = (ArrayList<Point>) points.clone();
 		reste.removeAll(domNaif);
-		ArrayList<Point> solutionPrime = new ArrayList<Point>(); 
 		for (int i=0; i<domNaif.size() ; i++) {
 			Point m = domNaif.get(i);
 
 			for (int j=i+1; j<domNaif.size();j++) {
 				Point n = domNaif.get(j);
-				if(m.distance(n)>3*edgeThreshold) continue;
+				if(m.distance(n)>2*edgeThreshold) continue;
 
-				//				double x = (double)(m.x+n.x)/2;
-				//				double y = (double)(m.y+n.y)/2;
-				//				Point midPoint = new Point((int)x,(int)y);
+				/*double x = (double)(m.x+n.x)/2;
+				double y = (double)(m.y+n.y)/2;
+				Point midPoint = new Point((int)x,(int)y);*/
 
 				for (int k=j+1; k<domNaif.size();k++) {
 					Point q = domNaif.get(k);
-					if(q.distance(m)>3*edgeThreshold || q.distance(n)>3*edgeThreshold ) continue;
-					//					double mx = (double)(m.x+n.x+q.x)/3;
-					//					double my = (double)(m.y+n.y+q.y)/3;
-					//					Point pointMilieu = new Point((int)mx,(int)my);
+					if(q.distance(m)>2*edgeThreshold || q.distance(n)>2*edgeThreshold) continue;
+					
+				/*	double mx = (double)(m.x+n.x+q.x)/3;
+					double my = (double)(m.y+n.y+q.y)/3;
+					Point pointMilieu = new Point((int)mx,(int)my);*/
+					
 					for(Point p1: reste) {
-						if( p1.distance(m)>2*edgeThreshold || p1.distance(n)>2*edgeThreshold || p1.distance(q)>2*edgeThreshold) {
+						if(p1.distance(m)>2*edgeThreshold || p1.distance(n)>2*edgeThreshold || p1.distance(q)>2*edgeThreshold) {
 							continue;
 						}
 						for(Point p2: reste) {
-							if( p2.equals(p1) || p2.distance(p1)>3*edgeThreshold|| p2.distance(m)>2*edgeThreshold 
-									|| p2.distance(n)>2*edgeThreshold || p2.distance(q)>2*edgeThreshold ){
+							if(p2.equals(p1) || p2.distance(m)>2*edgeThreshold || p2.distance(n)>2*edgeThreshold || p2.distance(q)>2*edgeThreshold) {
 								continue;
 							}
 							solutionPrime = (ArrayList<Point>) domNaif.clone();
@@ -402,7 +403,7 @@ public class DefaultTeam {
 		}
 		return domNaif;
 	}
-	public ArrayList<Point> algo(ArrayList<Point> points, int edgeThreshold){
+	public static ArrayList<Point> algo(ArrayList<Point> points, int edgeThreshold){
 		ArrayList<Point> resultFinal = DefaultTeam.gloutonX(points,edgeThreshold);
 
 		int s = resultFinal.size();
@@ -442,7 +443,7 @@ public class DefaultTeam {
 	}
 	public ArrayList<Point> calculDominatingSet(ArrayList<Point> points, int edgeThreshold) throws InterruptedException, ExecutionException {
 
-		return algo(points,edgeThreshold);
+		return multithread(points,edgeThreshold,10);
 		
 	}
 
