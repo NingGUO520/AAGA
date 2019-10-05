@@ -163,7 +163,7 @@ public class DefaultTeam {
 			graphe.removeAll(dom);
 
 			if(graphe.size()>0) {
-				Collections.shuffle(graphe);
+//				Collections.shuffle(graphe);
 				Point pDegmin = getDegMin(graphe,edgeThreshold);
 				ArrayList<Point> voisins = neighbor(pDegmin,graphe,edgeThreshold);
 				if(voisins.size() == 0) {
@@ -171,7 +171,7 @@ public class DefaultTeam {
 					graphe.remove(pDegmin);
 				}else {
 
-					Collections.shuffle(voisins);
+//					Collections.shuffle(voisins);
 					Point aAjouter = getDegMax(graphe,voisins,edgeThreshold);
 					dom.add(aAjouter);
 					graphe.removeAll(neighbor(aAjouter,graphe,edgeThreshold));
@@ -334,7 +334,7 @@ public class DefaultTeam {
 		ArrayList<Point> solutionPrime = new ArrayList<Point>();
 		ArrayList<Point> reste = (ArrayList<Point>) points.clone();
 		reste.removeAll(domNaif);
-		System.out.println("dom size "+ domNaif.size());
+//		System.out.println("dom size "+ domNaif.size());
 		for (int i=0; i<domNaif.size() ; i++) {
 			for (int j=i+1; j<domNaif.size();j++) {
 				Point m = domNaif.get(i);
@@ -358,7 +358,7 @@ public class DefaultTeam {
 	}
 
 	public static ArrayList<Point> localSearchNaif3_2(ArrayList<Point> points, ArrayList<Point> domNaif, int edgeThreshold) {
-		System.out.println("taille de dominants localS3_2 = "+ domNaif.size());
+//		System.out.println("taille de dominants localS3_2 = "+ domNaif.size());
 		ArrayList<Point> solutionPrime = new ArrayList<Point>(); 
 		ArrayList<Point> reste = (ArrayList<Point>) points.clone();
 		reste.removeAll(domNaif);
@@ -418,7 +418,7 @@ public class DefaultTeam {
 
 		}
 
-		System.out.println("size apres glouton "+resultFinal.size());
+//		System.out.println("size apres glouton "+resultFinal.size());
 
 		int nb1 = resultFinal.size();
 		resultFinal= localSearch2_1(points,resultFinal,edgeThreshold);

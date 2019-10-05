@@ -37,7 +37,7 @@ public class Tache implements Callable<ArrayList<Point>> {
 //
 //		}
 
-		System.out.println("Task "+ numeroTask+" a un resultMinimum "+resultMinimum.size() );
+//		System.out.println("Task "+ numeroTask+" a un resultMinimum "+resultMinimum.size() );
 		return resultMinimum;
 	}
 
