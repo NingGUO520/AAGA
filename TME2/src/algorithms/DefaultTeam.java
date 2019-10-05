@@ -163,7 +163,6 @@ public class DefaultTeam {
 			graphe.removeAll(dom);
 
 			if(graphe.size()>0) {
-//				Collections.shuffle(graphe);
 				Point pDegmin = getDegMin(graphe,edgeThreshold);
 				ArrayList<Point> voisins = neighbor(pDegmin,graphe,edgeThreshold);
 				if(voisins.size() == 0) {
@@ -171,7 +170,6 @@ public class DefaultTeam {
 					graphe.remove(pDegmin);
 				}else {
 
-//					Collections.shuffle(voisins);
 					Point aAjouter = getDegMax(graphe,voisins,edgeThreshold);
 					dom.add(aAjouter);
 					graphe.removeAll(neighbor(aAjouter,graphe,edgeThreshold));
@@ -443,7 +441,7 @@ public class DefaultTeam {
 	}
 	public ArrayList<Point> calculDominatingSet(ArrayList<Point> points, int edgeThreshold) throws InterruptedException, ExecutionException {
 
-		return multithread(points,edgeThreshold,10);
+		return multithread(points,edgeThreshold,20);
 		
 	}
 
