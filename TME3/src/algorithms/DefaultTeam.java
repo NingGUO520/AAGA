@@ -338,11 +338,12 @@ public class DefaultTeam {
     	 while(i>1) {
     		
     		
-    			while(getNodes(grey,black,blue,i,edgeThreshold).size()>0 ) {
+    		 Point point = getNodes(grey,black,blue,i,edgeThreshold);
+    			while(point!=null ) {
         			
     				
-    				grey.remove(g);
-    				blue.add(g);
+    				grey.remove(point);
+    				blue.add(point);
     				
         		}
     		 i--;
@@ -350,8 +351,13 @@ public class DefaultTeam {
     	 return blue;
     }
 
-    public ArrayList<Point> getNodes(ArrayList<Point> grey,ArrayList<Point> black,
+    public Point getNodes(ArrayList<Point> grey,ArrayList<Point> black,
     		ArrayList<Point> blue,int i, int edgeThreshold){
+    	
+    	for(Point g : grey) {
+    		
+    	}
+    	
     	return null;
     }
 	
