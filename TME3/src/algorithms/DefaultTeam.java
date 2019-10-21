@@ -277,7 +277,6 @@ public class DefaultTeam {
 	  }
 	public Tree2D listeToArbre( ArrayList<Arete> solutions, Point racine) {
 		
-		  
 		  ArrayList<Arete> aretes =  (ArrayList<Arete>) solutions.clone();
 		  ArrayList<Tree2D> subTrees = new ArrayList<Tree2D>();
 		   
@@ -306,16 +305,10 @@ public class DefaultTeam {
 	public void reetiquette(Map<Point,Integer> map, int x, int y) {
 		  
 		  for(Map.Entry<Point,Integer> entry : map.entrySet()) {
-			  
-			  
 			  if(entry.getValue() == x) {
-				  
 				  entry.setValue(y);
 			  }
-			  
 		  }
-		  
-		  
 	  }
 	public ArrayList<Point> calculConnectedDominatingSet(ArrayList<Point> points, int edgeThreshold) {
 		//REMOVE >>>>>
